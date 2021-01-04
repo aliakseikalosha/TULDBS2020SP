@@ -81,8 +81,7 @@ CREATE TABLE Zamestnanec_Ordinace (
 -- Reference: Navstevy_Ordinace (table: Navstevy)
 ALTER TABLE Navstevy ADD CONSTRAINT Navstevy_Ordinace
     FOREIGN KEY (id_ordinace)
-    REFERENCES Ordinace (id_ordinace)
-    ON DELETE  SET NULL;
+    REFERENCES Ordinace (id_ordinace);
 
 -- Reference: Navstevy_Pacienti (table: Navstevy)
 ALTER TABLE Navstevy ADD CONSTRAINT Navstevy_Pacienti

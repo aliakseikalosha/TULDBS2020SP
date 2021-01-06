@@ -6,7 +6,7 @@ public class Generator {
 
     static int[] addressid = {1,20};
     static int[] pos = {1,5};
-    static int[] empId ={1,10};
+    static int[] empId ={1,12};
     static int[] ordId ={3,20};
     static String[] rcAll = {"6615019611","8860270338","1578904862","4717368948","4106301511","0117149123","7422367885","9378977559","5186706552","6023896125","4529709148","8266047540","5670928165","7933441605","0897426073","4065265421","5888434886","5614808227","1633263596","1088427069","8406376730","6105475933","2194035905","4140673944","4231229481","6052687893","6681552557","2316413772","7509930312","7070794070","4461036837","4566173454","0546293865","6085636021","6263132232","8937891625","4107448488","7107892542","5600705982","0420395760","0175204515","7926610549","6411308689","5536572194","3112915799","1838499091","7281304263","6415138472","9266961337","6362731963"};
 
@@ -40,6 +40,16 @@ public class Generator {
         }
         System.out.println(sb.toString());
         System.out.println(rcsb.append("}").toString());
+    }
+
+    public static void GenerateEmployeeClinic(){
+        Random r = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = empId[0]; i <= empId[1]; i++) {
+            //insert into Zamestnanec_Ordinace values (1, 1, '2021-01-04 23:37:28', NULL)
+            sb.append(String.format("INSERT INTO Zamestnanec_Ordinace VALUES (%d, %d, '%s', %s)%n", i,randInt(ordId, r),randTime(r),"NULL"));
+        }
+        System.out.println(sb.toString());
     }
 
     public static void GenerateVisit() {

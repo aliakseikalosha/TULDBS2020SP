@@ -18,7 +18,7 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Generator.GenerateEmployee();
+        Generator.GenerateEmployeeClinic();
         boolean run = false;
         while (run) {
             printMainMenu();

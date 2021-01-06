@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-12-17 23:09:02.563
+-- Last modification date: 2021-01-04 22:23:27.662
 
 -- tables
 -- Table: Adresy
@@ -7,13 +7,13 @@ CREATE TABLE Adresy (
     mesto nvarchar(100)  NOT NULL,
     ulice nvarchar(100)  NOT NULL,
     psc int  NOT NULL,
-    id_adresy int  NOT NULL,
+    id_adresy int  NOT NULL IDENTITY,
     CONSTRAINT Adresy_pk PRIMARY KEY  (id_adresy)
 );
 
 -- Table: Navstevy
 CREATE TABLE Navstevy (
-    pacienti_rodne_cislo int  NOT NULL,
+    pacienti_rodne_cislo nvarchar(10)  NOT NULL,
     id_zamestnanec int  NOT NULL,
     id_ordinace int  NOT NULL,
     datum datetime  NOT NULL,
@@ -32,13 +32,13 @@ CREATE TABLE Ordinace (
 -- Table: Pacient_Ordinace
 CREATE TABLE Pacient_Ordinace (
     id_ordinace int  NOT NULL,
-    pacienti_rodne_cislo int  NOT NULL,
+    pacienti_rodne_cislo nvarchar(10)  NOT NULL,
     CONSTRAINT Pacient_Ordinace_pk PRIMARY KEY  (id_ordinace,pacienti_rodne_cislo)
 );
 
 -- Table: Pacienti
 CREATE TABLE Pacienti (
-    rodne_cislo int  NOT NULL IDENTITY,
+    rodne_cislo nvarchar(10)  NOT NULL,
     id_adresy int  NOT NULL,
     jmeno nvarchar(100)  NOT NULL,
     CONSTRAINT Pacienti_pk PRIMARY KEY  (rodne_cislo)

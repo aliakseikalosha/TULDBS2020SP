@@ -1,6 +1,11 @@
 package org.lesson.db;
 
 public class Employee {
+    public static final String KEY_NAME = "jmeno";
+    public static final String KEY_DEGREE = "titul";
+    public static final String KEY_WORK = "id_pozice";
+    public static final String KEY_ID = "id_zamestnanec";
+
     private int id;
     private String name;
     private String degree;
@@ -33,5 +38,16 @@ public class Employee {
 
     public int getId_work() {
         return id_work;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", degree='" + degree + '\'' +
+                ", id_address=" + id_address +
+                ", id_work=" + id_work +
+                '}';
     }
 }

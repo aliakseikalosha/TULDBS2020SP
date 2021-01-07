@@ -1,22 +1,22 @@
---1 seznam zamìstnancù podle polikliniky(asi predelat)
---vnoøený SELECT v SELECT
-
---2 (poèet návštìv pacientu v ordinacích)
+--1 seznam zamï¿½stnancï¿½ podle polikliniky(asi predelat)
+--vnoï¿½enï¿½ SELECT v SELECT
+SELECT id_poliklinika, count = (
+        SELECT COUNT(id_ordinace)
+        FROM Ordinace o
+        WHERE p.id_poliklinika = o.id_poliklinika)
+FROM Polikliniky p
+--2 (poï¿½et nï¿½vï¿½tï¿½v pacientu v ordinacï¿½ch)
 --ordinace se 2 a vice navstevami
---vnoøený SELECT ve FROM
---SELECT O.id_ordinace, COUNT(x.id_ordinace)
---FROM Ordinace O,
---	(
-	
---		SELECT id_ordinace
---		FROM Navstevy
+--vnoï¿½enï¿½ SELECT ve FROM
+SELECT id_ordinace,nazev,id_poliklinika,COUNT(visit) as count
+FROM (SELECT  o.id_ordinace,o.nazev,o.id_poliklinika, x.id_ordinace as visit
+    FROM Ordinace o JOIN (SELECT * FROM Navstevy  ) as x ON  o.id_ordinace = x.id_ordinace
+    )  u
+GROUP BY u.id_ordinace,u.nazev,id_poliklinika
+HAVING COUNT(visit) > ?
 
---	) x
---	WHERE x.id_ordinace = O.id_ordinace
-
---3 seznam pacientù v urèitém mìstì (tøeba Liberec)
--- jmena pacientu kteri navstivili v case od data:)
---vnoøený SELECT ve WHERE
+--3. jmena pacientu kteri navstivili v case od data:)
+--vnoï¿½enï¿½ SELECT ve WHERE
 SELECT jmeno
 FROM Pacienti
 WHERE rodne_cislo IN (
@@ -24,11 +24,27 @@ WHERE rodne_cislo IN (
 	FROM Navstevy
 	WHERE datum > '2011-05-01 00:00:00'
 )
---4 poèty pacientù ve mìstech
+--4 poï¿½ty pacientï¿½ ve meste
 --GROUP BY
-
---5 seznam doktorù(!), kteøí nemìli návštìvy v urèitém období
---množinovou operaci
-
---6 seznam pacientù a zamìstnancù,kteøí pochází ze stejného mìsta
---LEFT JOIN
+SELECT mesto,COUNT(mesto)
+FROM Pacienti p RIGHT JOIN (
+    SELECT id_adresy, mesto
+    FROM Adresy
+) as x ON p.id_adresy = x.id_adresy
+GROUP BY mesto
+--5 seznam doktorï¿½(!), kteï¿½ï¿½ nemï¿½li nï¿½vï¿½tï¿½vy v urï¿½itï¿½m obdobï¿½
+--mnoï¿½inovou operaci
+SELECT * FROM Zamestnanci
+WHERE id_zamestnanec IN (
+    SELECT id_zamestnanec FROM Zamestnanci
+        EXCEPT
+    SELECT id_zamestnanec
+    FROM Navstevy
+    WHERE datum > '2010-07-19 13:29:00' AND datum < '2011-01-13 13:31:00'
+)
+--6 Pocet navstev jednotlibych ordinai, serazenych sestupne
+-- --LEFT JOIN
+SELECT o.nazev, o.id_ordinace, o.id_poliklinika, COUNT(n.id_ordinace) as count
+FROM Ordinace o  LEFT JOIN Navstevy n ON o.id_ordinace = n.id_ordinace
+GROUP BY o.nazev, n.id_ordinace, o.id_ordinace,o.id_poliklinika
+ORDER BY count DESC

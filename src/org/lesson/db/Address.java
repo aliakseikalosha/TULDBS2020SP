@@ -3,6 +3,7 @@ package org.lesson.db;
 public class Address {
 
     public static final String KEY_ID = "id_adresy";
+    public static final String KEY_CITY = "mesto";
     private int id;
     private String city;
     private String street;

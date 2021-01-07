@@ -1,14 +1,13 @@
 package org.lesson.app;
-import org.lesson.db.Clinic;
-import org.lesson.db.Employee;
-import org.lesson.db.Generator;
-import org.lesson.db.SQLHelper;
+
+import org.lesson.db.*;
 
 import java.io.File;
 import java.sql.*;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 
 public class Main {
     private static final char POSITIVE_ANSWER = 'a';
@@ -18,8 +17,7 @@ public class Main {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Generator.GenerateEmployeeClinic();
-        boolean run = false;
+        boolean run = true;
         while (run) {
             printMainMenu();
             int input = getInput();
@@ -28,13 +26,13 @@ public class Main {
                     run = false;
                     break;
                 case 1:
-                    listEmployeeInClinic();
+                    listNumberOfOrdinationsInClinics();
                     break;
                 case 2:
                     visitCountInDoctorOffice();
                     break;
                 case 3:
-                    listPatientsInCity();
+                    listPatientsWhoVisitedAfterDate();
                     break;
                 case 4:
                     listPatientCountInCities();
@@ -45,52 +43,145 @@ public class Main {
                 case 6:
                     listEmployeeAndPatientsSameCity();
                     break;
+                case 7:
+                    addPatient();
+                    break;
+                case 8:
+                    deletePatient();
+                    break;
+                case 9:
+                    editPatient();
+                    break;
                 default:
                     System.out.println("Zadana neplatna volba");
             }
         }
     }
 
+    private static void editPatient() {
+        String rc = getString("Zadejte rodne cislo");
+        String name = getString("Zadejte nove jmeno");
+        System.out.println("Zadejte id nove adresy");
+        int addres = getInput();
+        try {
+            SQLHelper.editPatient(rc,name,addres);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private static void deletePatient() {
+        System.out.println("Zadejte rodne cislo pacienta.");
+        String rc = sc.nextLine();
+        try {
+            SQLHelper.deletePatient(rc);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private static void addPatient() {
+        String rc = getString("Zadejte rodne cislo");
+        String name = getString("Zadejte jmeno");
+        System.out.println("Zadejte id adresy");
+        int adress = getInput();
+        try {
+            SQLHelper.addPatient(new Patient(rc,adress,name));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private static String getString(String text){
+        System.out.println(text);
+        String s = sc.nextLine();
+        if(s.length() == 0){
+            return getString(text);
+        }
+        return s;
+    }
 
     private static void listEmployeeAndPatientsSameCity() {
         System.out.println("6. Seznam pacientu a doktoru ktery pochazi ze stejneho mesta.");
-
+        try {
+            Map<Ordinace, Integer> count = SQLHelper.getOrdinaceCount();
+            for (Map.Entry<Ordinace, Integer> entry : count.entrySet()) {
+                System.out.print(entry.getKey().toString());
+                System.out.print("\t");
+                System.out.println(entry.getValue());
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     private static void listNotWorkingDoctorsFromTo() {
         System.out.println("5. Vypis seznam doktoru ktery nemeli nastevu v urcitem odbodi.");
+        Date from  = getDate();
+        Date to  = getDate();
+        try {
+            List<Employee> employees = SQLHelper.getEmployeesWithoutWork(from,to);
+            for (Employee e : employees) {
+                System.out.println(e.toString());
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 
     private static void listPatientCountInCities() {
-        System.out.println("4. Vypis pocet pacientu ve vsech menstach.");
+        System.out.println("4. Vypis pocet pacientu ve vsech mestech.");
+        try {
+            Map<String,Integer> patientCount = SQLHelper.getPatientCountInCities();
+            for (Map.Entry<String, Integer> entry : patientCount.entrySet()) {
+                System.out.print(entry.getKey());
+                System.out.print("\t:\t");
+                System.out.println(entry.getValue());
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
-    private static void listPatientsInCity() {
-        System.out.println("3. Vypis seznam pacientu ve meste.");
+    private static void listPatientsWhoVisitedAfterDate() {
+        System.out.println("3. Jmena pacientu kteri navstivili v case od data");
+        Date after = getDate();
+        try {
+            List<Patient> patients = SQLHelper.getPatientWhoVisit(after);
+            for (Patient p : patients) {
+                System.out.println(p.toString());
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     private static void visitCountInDoctorOffice() {
-        System.out.println("2. Vypis pocet navstev pocientem ordinaci za urcitou dobu.");
+        System.out.println("2. Vypis ordinace ktere maji vic nez 2 navstevy.");
+        Map<Ordinace, Integer> count = null;
+        try {
+            count = SQLHelper.getVisitCount(2);
+            for (Map.Entry<Ordinace, Integer> entry : count.entrySet()) {
+                System.out.print(entry.getKey().toString());
+                System.out.print("\t");
+                System.out.println(entry.getValue());
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
-    private static void listEmployeeInClinic() {
-        System.out.println("1. Vypis seznam zamestnancu v poliklinice.");
-        List<Clinic> clinics = null;
+    private static void listNumberOfOrdinationsInClinics() {
+        System.out.println("1. Vypis pocty ordinaci v jednotlivych poliklinikach.");
         try {
-            clinics = SQLHelper.getAllClinic();
-            if(clinics.size()>0){
-                for (int i = 0, clinicsSize = clinics.size(); i < clinicsSize; i++) {
-                    Clinic c = clinics.get(i);
-                    System.out.format("%d. Clinic %d\n",i,c.getId());
-                }
-                Clinic c = clinics.get(getInput(0, clinics.size()-1));
-                List<Employee> employees  = SQLHelper.getEmployeesFrom(c);
-                for (Employee e : employees) {
-                    System.out.format(e.toString());
-                }
-            }else{
-                System.out.println("NO Clinics in DB!");
+            Map<Clinic, Integer> clinics = SQLHelper.getOrdinationCount();
+            for (Map.Entry<Clinic, Integer> entry : clinics.entrySet()) {
+                System.out.print(entry.getKey().toString());
+                System.out.print("\t");
+                System.out.println(entry.getValue());
             }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -99,12 +190,15 @@ public class Main {
     private static void printMainMenu() {
         System.out.println();
         System.out.println("Hlavni menu programu");
-        System.out.println("1. Vypis seznam zamestnancu v polikliniki.");
-        System.out.println("2. Vypis pocet navstev pocientem ordinaci za urcitou dobu.");
-        System.out.println("3. Vypis seznam pacientu ve meste.");
+        System.out.println("1. Vypis pocty ordinaci v jednotlivych poliklinikach.");
+        System.out.println("2. Vypis ordinace ktere maji vic nez 2 navstevy.");
+        System.out.println("3. Jmena pacientu kteri navstivili v case od data");
         System.out.println("4. Vypis pocet pacientu ve vsech menstach.");
         System.out.println("5. Vypis seznam doktoru ktery nemeli nastevu v urcitem odbodi.");
         System.out.println("6. Seznam pacientu a doktoru ktery pochazi ze stejneho mesta.");
+        System.out.println("7. Pridej noveho pacienta.");
+        System.out.println("8. Smaz pacienta.");
+        System.out.println("9. Editace pacienta.");
         System.out.println("0. ukoncit program.");
     }
 
@@ -120,6 +214,20 @@ public class Main {
         }
         System.out.println("Zadej ano nebo ne");
         return getAnswer();
+    }
+
+    private static Date getDate() {
+        System.out.println("Zadej datum ve formatu dd/mm/rrrr");
+        String dateString = sc.nextLine();
+        Date d = null;
+        try {
+            d = new SimpleDateFormat("dd/MM/yyyy").parse(dateString);
+        } catch (ParseException e) {
+            //e.printStackTrace();
+            System.out.println("Zadan spatny datum.");
+            return getDate();
+        }
+        return d;
     }
 
     private static File getWorkDirectory() {

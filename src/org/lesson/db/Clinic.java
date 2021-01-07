@@ -17,4 +17,12 @@ public class Clinic {
     public int getId_address() {
         return id_address;
     }
+
+    @Override
+    public String toString() {
+        return "Clinic{" +
+                "id=" + id +
+                ", id_address=" + id_address +
+                '}';
+    }
 }

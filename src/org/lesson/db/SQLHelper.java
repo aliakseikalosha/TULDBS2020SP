@@ -8,7 +8,7 @@ public class SQLHelper {
 
     static final String databaseURL = "jdbc:sqlserver://" + Config.serverName + ";database=" + Config.databaseName;
 
-    public static List<Clinic> getAllClinic() throws SQLException {
+    public static List<Clinic> getAllClinics() throws SQLException {
         List<Clinic> clinics = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             //create statement
@@ -65,7 +65,7 @@ public class SQLHelper {
             return employees;
         }
     }
-    public static Employee getEmployeesBy(int id) throws SQLException {
+    public static Employee getEmployeeBy(int id) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             //create statement
             Statement stmnt = connection.createStatement();
@@ -146,7 +146,7 @@ public class SQLHelper {
             return null;
         }
     }
-    public static List<Patient> getAllPatient() throws SQLException {
+    public static List<Patient> getAllPatients() throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Patient> patients = new ArrayList<>();
             //create statement
@@ -236,7 +236,7 @@ public class SQLHelper {
     }
 
 
-    public static List<Patient> getPatientWhoVisit(Date from) throws SQLException {
+    public static List<Patient> getPatientsWhoVisited(Date from) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Patient> patients = new ArrayList<>();
             //create statement

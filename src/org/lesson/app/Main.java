@@ -56,7 +56,7 @@ public class Main {
                     SHOW_ALL();
                     break;
                 default:
-                    System.out.println("Zadana neplatna volba");
+                    System.out.println("Zadana neplatna volba.");
             }
         }
     }
@@ -64,7 +64,7 @@ public class Main {
     private static void SHOW_ALL() {
         List<Clinic> allClinics = new ArrayList<>();
         try {
-            allClinics = SQLHelper.getAllClinic();
+            allClinics = SQLHelper.getAllClinics();
             for (Clinic c : allClinics) {
                 System.out.println(c.toString());
             }
@@ -76,7 +76,7 @@ public class Main {
                 System.out.println(e);
             }
             System.out.println("-----------------");
-            System.out.println(SQLHelper.getEmployeesBy(1));
+            System.out.println(SQLHelper.getEmployeeBy(1));
             System.out.println("-----------------");
             List<Ordinace> os = SQLHelper.getAllOrdinace();
             for (Ordinace o : os) {
@@ -84,7 +84,7 @@ public class Main {
             }
             System.out.println("-----------------");
             System.out.println(SQLHelper.getOrdinaceBy(1));
-            List<Patient> patients = SQLHelper.getAllPatient();
+            List<Patient> patients = SQLHelper.getAllPatients();
             System.out.println("-----------------");
             for (Patient patient : patients) {
                 System.out.println(patient);
@@ -97,9 +97,9 @@ public class Main {
     }
 
     private static void editPatient() {
-        String rc = getString("Zadejte rodne cislo");
-        String name = getString("Zadejte nove jmeno");
-        System.out.println("Zadejte id nove adresy");
+        String rc = getString("Zadejte rodne cislo.");
+        String name = getString("Zadejte nove jmeno.");
+        System.out.println("Zadejte id nove adresy.");
         int addres = getInput();
         try {
             SQLHelper.editPatient(rc,name,addres);
@@ -119,9 +119,9 @@ public class Main {
     }
 
     private static void addPatient() {
-        String rc = getString("Zadejte rodne cislo");
-        String name = getString("Zadejte jmeno");
-        System.out.println("Zadejte id adresy");
+        String rc = getString("Zadejte rodne cislo.");
+        String name = getString("Zadejte jmeno.");
+        System.out.println("Zadejte id adresy.");
         int adress = getInput();
         try {
             SQLHelper.addPatient(new Patient(rc,adress,name));
@@ -154,7 +154,7 @@ public class Main {
     }
 
     private static void listNotWorkingDoctorsFromTo() {
-        System.out.println("5. Vypis seznam doktoru ktery nemeli nastevu v urcitem odbodi.");
+        System.out.println("5. Vypis seznam doktoru kteri nemeli nastevu v urcitem odbodi.");
         Date from  = getDate();
         Date to  = getDate();
         try {
@@ -183,10 +183,10 @@ public class Main {
     }
 
     private static void listPatientsWhoVisitedAfterDate() {
-        System.out.println("3. Jmena pacientu kteri navstivili v case od data");
+        System.out.println("3. Vypis jmena pacientu kteri navstivili v case od zadaneho data.");
         Date after = getDate();
         try {
-            List<Patient> patients = SQLHelper.getPatientWhoVisit(after);
+            List<Patient> patients = SQLHelper.getPatientsWhoVisited(after);
             for (Patient p : patients) {
                 System.out.println(p.toString());
             }
@@ -230,9 +230,9 @@ public class Main {
         System.out.println("Hlavni menu programu");
         System.out.println("1. Vypis pocty ordinaci v jednotlivych poliklinikach.");
         System.out.println("2. Vypis ordinace ktere maji vic nez 2 navstevy.");
-        System.out.println("3. Jmena pacientu kteri navstivili v case od data");
-        System.out.println("4. Vypis pocet pacientu ve vsech menstach.");
-        System.out.println("5. Vypis seznam doktoru ktery nemeli nastevu v urcitem odbodi.");
+        System.out.println("3. Vypis jmena pacientu kteri navstivili v case od zadaneho data.");
+        System.out.println("4. Vypis pocet pacientu ve vsech mestech.");
+        System.out.println("5. Vypis seznam doktoru kteri nemeli nastevu v urcitem odbodi.");
         System.out.println("6. Seznam pacientu a doktoru ktery pochazi ze stejneho mesta.");
         System.out.println("7. Pridej noveho pacienta.");
         System.out.println("8. Smaz pacienta.");
@@ -251,19 +251,19 @@ public class Main {
                 return false;
             }
         }
-        System.out.println("Zadej ano nebo ne");
+        System.out.println("Zadej ano nebo ne.");
         return getAnswer();
     }
 
     private static Date getDate() {
-        System.out.println("Zadej datum ve formatu dd/mm/rrrr");
+        System.out.println("Zadej datum ve formatu dd/mm/rrrr.");
         String dateString = sc.nextLine();
         Date d = null;
         try {
             d = new SimpleDateFormat("dd/MM/yyyy").parse(dateString);
         } catch (ParseException e) {
             //e.printStackTrace();
-            System.out.println("Zadan spatny datum.");
+            System.out.println("Zadano spatne datum.");
             return getDate();
         }
         return d;
@@ -282,7 +282,7 @@ public class Main {
     private static long getInput(long min, long max) {
         long i = getInputLong();
         if (i < min || i > max) {
-            System.out.printf("Hodnota musi byt mezi %d a %d", min, max);
+            System.out.printf("Hodnota musi byt mezi %d a %d!", min, max);
             return getInput(min, max);
         }
         return i;
@@ -294,7 +294,7 @@ public class Main {
             i = sc.nextByte();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Zadana spatna volba");
+            System.out.println("Zadana spatna volba.");
         } finally {
             sc.nextLine();
         }
@@ -307,7 +307,7 @@ public class Main {
             i = sc.nextShort();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Zadana spatna volba");
+            System.out.println("Zadana spatna volba.");
         } finally {
             sc.nextLine();
         }
@@ -320,7 +320,7 @@ public class Main {
             i = sc.nextLong();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Zadana spatna volba");
+            System.out.println("Zadana spatna volba.");
         } finally {
             sc.nextLine();
         }
@@ -334,7 +334,7 @@ public class Main {
             return i;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Zadana spatna volba");
+            System.out.println("Zadana spatna volba.");
         } finally {
             sc.nextLine();
         }
@@ -344,7 +344,7 @@ public class Main {
     private static byte getInput(byte min, byte max) {
         byte i = getInputByte();
         if (i < min || i > max) {
-            System.out.printf("Hodnota musi byt mezi %d a %d", min, max);
+            System.out.printf("Hodnota musi byt mezi %d a %d.", min, max);
             return getInput(min, max);
         }
         return i;
@@ -353,7 +353,7 @@ public class Main {
     private static short getInput(short min, short max) {
         short i = getInputShort();
         if (i < min || i > max) {
-            System.out.printf("Hodnota musi byt mezi %d a %d", min, max);
+            System.out.printf("Hodnota musi byt mezi %d a %d.", min, max);
             return getInput(min, max);
         }
         return i;
@@ -363,7 +363,7 @@ public class Main {
     private static float getInput(float min, float max) {
         float i = getInputFloat();
         if (i < min || i > max) {
-            System.out.printf("Hodnota musi byt mezi %d a %d", min, max);
+            System.out.printf("Hodnota musi byt mezi %d a %d.", min, max);
             return getInput(min, max);
         }
         return i;
@@ -372,7 +372,7 @@ public class Main {
     private static int getInput(int min, int max) {
         int i = getInput();
         if (i < min || i > max) {
-            System.out.printf("Hodnota musi byt mezi %d a %d", min, max);
+            System.out.printf("Hodnota musi byt mezi %d a %d.", min, max);
             return getInput(min, max);
         }
         return i;
@@ -384,7 +384,7 @@ public class Main {
             i = sc.nextInt();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Zadana spatna volba");
+            System.out.println("Zadana spatna volba.");
         } finally {
             sc.nextLine();
         }

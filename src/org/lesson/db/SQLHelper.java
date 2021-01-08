@@ -25,6 +25,147 @@ public class SQLHelper {
         return clinics;
     }
 
+    public static  Clinic getClinicBy(int id) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
+            //create statement
+            Statement stmnt = connection.createStatement();
+            //execute query
+            String sql = "SELECT * FROM Polikliniky WHERE id_poliklinika = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            //process result
+            while (rs.next()) {
+                id = rs.getInt(Clinic.KEY_ID);
+                int address = rs.getInt(Address.KEY_ID);
+                return new Clinic(id, address);
+            }
+        }
+        return null;
+    }
+    public static List<Employee> getAllEmployees() throws SQLException {
+        try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
+            List<Employee> employees = new ArrayList<>();
+            //create statement
+            Statement stmnt = connection.createStatement();
+            String sql = "SELECT * FROM Zamestnanci";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            //execute query
+            ResultSet rs = preparedStatement.executeQuery();
+            //process result
+            while (rs.next()) {
+                int id = rs.getInt(Employee.KEY_ID);
+                int address = rs.getInt(Address.KEY_ID);
+                String name = rs.getString(Employee.KEY_NAME);
+                String degree = rs.getString(Employee.KEY_DEGREE);
+                int work = rs.getInt(Employee.KEY_WORK);
+                employees.add(new Employee(id, name, degree, address, work));
+            }
+            return employees;
+        }
+    }
+    public static Employee getEmployeesBy(int id) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
+            //create statement
+            Statement stmnt = connection.createStatement();
+            String sql = "SELECT * FROM Zamestnanci WHERE id_zamestnanec = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,id);
+            //execute query
+            ResultSet rs = preparedStatement.executeQuery();
+            //process result
+            while (rs.next()) {
+                id = rs.getInt(Employee.KEY_ID);
+                int address = rs.getInt(Address.KEY_ID);
+                String name = rs.getString(Employee.KEY_NAME);
+                String degree = rs.getString(Employee.KEY_DEGREE);
+                int work = rs.getInt(Employee.KEY_WORK);
+                return new Employee(id, name, degree, address, work);
+            }
+            return null;
+        }
+    }
+
+    public static Ordinace getOrdinaceBy(int id) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
+            //create statement
+            Statement stmnt = connection.createStatement();
+            String sql = "SELECT *  FROM Ordinace WHERE id_ordinace = ? ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            //execute query
+            ResultSet rs = preparedStatement.executeQuery();
+            //process result
+            while (rs.next()) {
+                id = rs.getInt(Ordinace.KEY_ID);
+                int clinic = rs.getInt(Clinic.KEY_ID);
+                String name = rs.getString(Ordinace.KEY_NAME);
+                return new Ordinace(id, name, clinic);
+            }
+        }
+        return null;
+    }
+
+    public static List<Ordinace> getAllOrdinace() throws SQLException {
+        try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
+            List<Ordinace> list  = new ArrayList<>();
+            //create statement
+            Statement stmnt = connection.createStatement();
+            String sql = "SELECT *  FROM Ordinace";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            //execute query
+            ResultSet rs = preparedStatement.executeQuery();
+            //process result
+            while (rs.next()) {
+                int id = rs.getInt(Ordinace.KEY_ID);
+                int clinic = rs.getInt(Clinic.KEY_ID);
+                String name = rs.getString(Ordinace.KEY_NAME);
+                list.add(new Ordinace(id, name, clinic));
+            }
+            return list;
+        }
+    }
+
+    public static Patient getPatientBy(String id) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
+            //create statement
+            Statement stmnt = connection.createStatement();
+            String sql = "SELECT * FROM Pacienti WHERE rodne_cislo = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            //execute query
+            ResultSet rs = preparedStatement.executeQuery();
+            //process result
+            while (rs.next()) {
+                id = rs.getString(Patient.KEY_ID);
+                int address = rs.getInt(Address.KEY_ID);
+                String name = rs.getString(Patient.KEY_NAME);
+               return new Patient(id, address, name);
+            }
+            return null;
+        }
+    }
+    public static List<Patient> getAllPatient() throws SQLException {
+        try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
+            List<Patient> patients = new ArrayList<>();
+            //create statement
+            Statement stmnt = connection.createStatement();
+            String sql = "SELECT * FROM Pacienti";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            //execute query
+            ResultSet rs = preparedStatement.executeQuery();
+            //process result
+            while (rs.next()) {
+                String id = rs.getString(Patient.KEY_ID);
+                int address = rs.getInt(Address.KEY_ID);
+                String name = rs.getString(Patient.KEY_NAME);
+                patients.add(new Patient(id, address, name));
+            }
+            return patients;
+        }
+    }
+
     public static List<Employee> getEmployeesFrom(Clinic c) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Employee> employees = new ArrayList<>();

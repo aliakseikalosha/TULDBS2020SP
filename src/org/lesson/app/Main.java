@@ -52,9 +52,47 @@ public class Main {
                 case 9:
                     editPatient();
                     break;
+                case 9001:
+                    SHOW_ALL();
+                    break;
                 default:
                     System.out.println("Zadana neplatna volba");
             }
+        }
+    }
+
+    private static void SHOW_ALL() {
+        List<Clinic> allClinics = new ArrayList<>();
+        try {
+            allClinics = SQLHelper.getAllClinic();
+            for (Clinic c : allClinics) {
+                System.out.println(c.toString());
+            }
+            System.out.println("-----------------");
+            System.out.println(SQLHelper.getClinicBy(1).toString());
+            System.out.println("-----------------");
+            List<Employee> employees = SQLHelper.getAllEmployees();
+            for (Employee e : employees) {
+                System.out.println(e);
+            }
+            System.out.println("-----------------");
+            System.out.println(SQLHelper.getEmployeesBy(1));
+            System.out.println("-----------------");
+            List<Ordinace> os = SQLHelper.getAllOrdinace();
+            for (Ordinace o : os) {
+                System.out.println(o);
+            }
+            System.out.println("-----------------");
+            System.out.println(SQLHelper.getOrdinaceBy(1));
+            List<Patient> patients = SQLHelper.getAllPatient();
+            System.out.println("-----------------");
+            for (Patient patient : patients) {
+                System.out.println(patient);
+            }
+            System.out.println("-----------------");
+            System.out.println(SQLHelper.getPatientBy("4231229481"));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
@@ -199,6 +237,7 @@ public class Main {
         System.out.println("7. Pridej noveho pacienta.");
         System.out.println("8. Smaz pacienta.");
         System.out.println("9. Editace pacienta.");
+        System.out.println("9001. Chci videt vsechno.");
         System.out.println("0. ukoncit program.");
     }
 

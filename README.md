@@ -1,5 +1,5 @@
 # TULDBS2020SP
-Semistralni prace DBS 2020
+Semestrální práce DBS 2020
 
 Vertabelo
 ---------

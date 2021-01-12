@@ -28,12 +28,10 @@ public class SQLHelper {
     public static  Clinic getClinicBy(int id) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             //create statement
-            Statement stmnt = connection.createStatement();
-            //execute query
             String sql = "SELECT * FROM Polikliniky WHERE id_poliklinika = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-
+            //execute query
             ResultSet rs = preparedStatement.executeQuery();
             //process result
             while (rs.next()) {
@@ -48,7 +46,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Employee> employees = new ArrayList<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT * FROM Zamestnanci";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             //execute query
@@ -68,7 +65,6 @@ public class SQLHelper {
     public static Employee getEmployeeBy(int id) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT * FROM Zamestnanci WHERE id_zamestnanec = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1,id);
@@ -90,7 +86,6 @@ public class SQLHelper {
     public static Ordinace getOrdinaceBy(int id) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT *  FROM Ordinace WHERE id_ordinace = ? ";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
@@ -111,7 +106,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Ordinace> list  = new ArrayList<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT *  FROM Ordinace";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             //execute query
@@ -130,7 +124,6 @@ public class SQLHelper {
     public static Patient getPatientBy(String id) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT * FROM Pacienti WHERE rodne_cislo = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, id);
@@ -150,7 +143,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Patient> patients = new ArrayList<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT * FROM Pacienti";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             //execute query
@@ -170,7 +162,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Employee> employees = new ArrayList<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT * FROM Zamestnanci WHERE id_zamestnanec IN ( SELECT id_zamestnanec FROM Zamestnanec_Ordinace WHERE id_ordinace IN ( SELECT id_ordinace FROM Ordinace WHERE id_poliklinika = ? ) )";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, c.getId());
@@ -193,7 +184,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Employee> employees = new ArrayList<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT * FROM Zamestnanci WHERE id_zamestnanec IN (SELECT id_zamestnanec FROM Zamestnanci EXCEPT SELECT id_zamestnanec FROM Navstevy WHERE datum > ? AND datum < ?) ";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setDate(1, new java.sql.Date(from.getTime()));
@@ -217,7 +207,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             Map<Ordinace, Integer> list = new HashMap<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT id_ordinace,nazev,id_poliklinika,COUNT(visit) as count FROM (SELECT  o.id_ordinace,o.nazev,o.id_poliklinika, x.id_ordinace as visit FROM Ordinace o JOIN (SELECT * FROM Navstevy) as x ON  o.id_ordinace = x.id_ordinace)  u GROUP BY u.id_ordinace,u.nazev,id_poliklinika HAVING COUNT(visit) > ? ";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, moreThan);
@@ -240,7 +229,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             List<Patient> patients = new ArrayList<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT * FROM Pacienti WHERE rodne_cislo IN (SELECT pacienti_rodne_cislo FROM Navstevy WHERE datum > ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setDate(1, new java.sql.Date(from.getTime()));
@@ -261,7 +249,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             Map<String, Integer> map = new HashMap<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT mesto,COUNT(mesto) as count FROM Pacienti p RIGHT JOIN ( SELECT id_adresy, mesto FROM Adresy ) as x ON p.id_adresy = x.id_adresy GROUP BY mesto";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             //execute query
@@ -280,7 +267,6 @@ public class SQLHelper {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
             Map<Ordinace, Integer> list = new HashMap<>();
             //create statement
-            Statement stmnt = connection.createStatement();
             String sql = "SELECT o.nazev, o.id_ordinace, o.id_poliklinika, COUNT(n.id_ordinace) as count FROM Ordinace o  LEFT JOIN Navstevy n ON o.id_ordinace = n.id_ordinace GROUP BY o.nazev, n.id_ordinace, o.id_ordinace,o.id_poliklinika";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             //execute query
@@ -317,7 +303,6 @@ public class SQLHelper {
 
     public static void deletePatient(String rc) throws SQLException {
         try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
-            Statement stmnt = connection.createStatement();
             String sql = ("DELETE FROM Pacienti WHERE rodne_cislo = ?");
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1,rc);
@@ -346,21 +331,5 @@ public class SQLHelper {
             preparedStatement.executeUpdate();
         }
     }
-
-    /*
-    try (Connection connection = DriverManager.getConnection(databaseURL, Config.username, Config.password)) {
-            //create statement
-            Statement stmnt = connection.createStatement();
-            //execute query
-            ResultSet rs = stmnt.executeQuery("SELECT * FROM Studenti");
-            //process result
-            while (rs.next()) {
-                String name = rs.getString("sJmeno");
-                double prumer = rs.getDouble("prumer");
-                System.out.format("%-10s %4.2f%n",name, prumer);
-
-            }
-        }
-     */
 
 }

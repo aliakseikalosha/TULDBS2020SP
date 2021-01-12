@@ -42,7 +42,7 @@ public class Main {
                     listNotWorkingDoctorsFromTo();
                     break;
                 case 6:
-                    listEmployeeAndPatientsSameCity();
+                    listVisitCountInOrdination();
                     break;
                 case 7:
                     addPatient();
@@ -140,8 +140,8 @@ public class Main {
         return s;
     }
 
-    private static void listEmployeeAndPatientsSameCity() {
-        System.out.println("6. Seznam pacientu a doktoru ktery pochazi ze stejneho mesta.");
+    private static void listVisitCountInOrdination() {
+        System.out.println("6. Pocet navstev v ordinacich jednotlivych poliklinik.");
         try {
             Map<Ordinace, Integer> count = SQLHelper.getOrdinaceCount();
             for (Map.Entry<Ordinace, Integer> entry : count.entrySet()) {
@@ -234,7 +234,7 @@ public class Main {
         System.out.println("3. Vypis jmena pacientu kteri navstivili v case od zadaneho data.");
         System.out.println("4. Vypis pocet pacientu ve vsech mestech.");
         System.out.println("5. Vypis seznam doktoru kteri nemeli nastevu v urcitem odbodi.");
-        System.out.println("6. Seznam pacientu a doktoru ktery pochazi ze stejneho mesta.");
+        System.out.println("6. Pocet navstev v ordinacich jednotlivych poliklinik.");
         System.out.println("7. Pridej noveho pacienta.");
         System.out.println("8. Smaz pacienta.");
         System.out.println("9. Editace pacienta.");

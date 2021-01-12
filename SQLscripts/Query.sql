@@ -42,7 +42,7 @@ WHERE id_zamestnanec IN (
     FROM Navstevy
     WHERE datum > '2010-07-19 13:29:00' AND datum < '2011-01-13 13:31:00'
 )
---6 
+--6
 -- --LEFT JOIN
 SELECT o.nazev, o.id_ordinace, o.id_poliklinika, COUNT(n.id_ordinace) as count
 FROM Ordinace o  LEFT JOIN Navstevy n ON o.id_ordinace = n.id_ordinace
